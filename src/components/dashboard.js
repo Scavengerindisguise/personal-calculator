@@ -1,9 +1,9 @@
 import React from 'react';
-import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Row, Button, Form, Input } from 'reactstrap';
+import { Table } from 'reactstrap';
 
 
 class Dashboard extends React.Component {
-    items = [];
     constructor(props) {
         super(props);
         this.state = {
@@ -23,8 +23,8 @@ class Dashboard extends React.Component {
         console.log(i, event.target.value);
         const name = event.target.name;
         const income = [...this.state.income];
-        income[i] = {...income[i], [name]: event.target.value}
-        this.setState({income});
+        income[i] = { ...income[i], [name]: event.target.value }
+        this.setState({ income });
     }
 
     addIncomeRow(event) {
@@ -40,31 +40,37 @@ class Dashboard extends React.Component {
     }
 
     returnRows() {
-        return this.state.income.map((el, i) => (
-            <>
-                <Row key={i} className="justify-content-center" form>
-                    <Col md={3}>
-                        <FormGroup>
-                            <Label for="source">Source</Label>
-                            <Input bsSize="sm" onChange={this.handleChange.bind(this,i)} value={el.source} type="text" name="source" id="source" placeholder="Source" />
-                        </FormGroup>
-                    </Col>
-                    <Col md={3}>
-                        <FormGroup>
-                            <Label for="amount">Amount</Label>
-                            <Input bsSize="sm" onChange={this.handleChange.bind(this,i)} value={el.amount} type="number" name="amount" id="amount" placeholder="Amount" />
-                        </FormGroup>
-                    </Col>
-                    <Col md={3}>
-                        <FormGroup>
-                            <Label for="date">Date</Label>
-                            <Input bsSize="sm" onChange={this.handleChange.bind(this,i)} value={el.date} type="date" name="date" id="date" placeholder="Date" />
-                        </FormGroup>
-                    </Col>
-                </Row>
-            </>
-        ))
+        const tableRows = this.state.income.map((el, i) => {
+            return (
+                <tr key={i} >
+                    <td>
+                        <Input bsSize="sm" onChange={this.handleChange.bind(this, i)} value={el.source} type="text" name="source" id="source" placeholder="Source" />
+                    </td>
+                    <td>
+                        <Input bsSize="sm" onChange={this.handleChange.bind(this, i)} value={el.amount} type="number" name="amount" id="amount" placeholder="Amount" />
+                    </td>
+                    <td>
+                        <Input bsSize="sm" onChange={this.handleChange.bind(this, i)} value={el.date} type="date" name="date" id="date" placeholder="Date" />
+                    </td>
+                </tr>
+            );
+        })
 
+
+        return (
+            <Table size="sm" bordered>
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {tableRows}
+                </tbody>
+            </Table>
+        )
     }
 
     render() {
@@ -75,8 +81,10 @@ class Dashboard extends React.Component {
                     <div className="col-md-6">
                         <h4>Income</h4>
                         <Form onSubmit={this.addIncomeRow}>
-                            {this.returnRows()}
-                            <Row className="justify-content-end">
+                            <div className="dashboard-table">
+                                {this.returnRows()}
+                            </div>
+                            <Row className="justify-content-end mr-1">
                                 <Button type="submit" value="submit" outline size="sm" color="info" >Add</Button>
                             </Row>
                         </Form>
