@@ -7,20 +7,34 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            incomeTotal: 0,
             income: [
                 {
                     source: '',
-                    amount: '',
+                    amount: 0,
                     date: '',
                 }
             ]
         }
         this.handleChange = this.handleChange.bind(this);
         this.addIncomeRow = this.addIncomeRow.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
+    }
+
+    handleBlur(event) {
+        console.log(event);
+        let total = 0;
+        for (let i = 0; i < this.state.income.length; i++) {
+            total = parseInt(this.state.incomeTotal, 10) + parseInt(this.state.income[i].amount, 10);
+        }
+        console.log(total, typeof (this.state.incomeTotal), this.state.income);
+        this.setState({
+            incomeTotal: total
+        });
     }
 
     handleChange(i, event) {
-        console.log(i, event.target.value);
+        // console.log(i, event.target.value);
         const name = event.target.name;
         const income = [...this.state.income];
         income[i] = { ...income[i], [name]: event.target.value }
@@ -47,7 +61,7 @@ class Dashboard extends React.Component {
                         <Input bsSize="sm" onChange={this.handleChange.bind(this, i)} value={el.source} type="text" name="source" id="source" placeholder="Source" />
                     </td>
                     <td>
-                        <Input bsSize="sm" onChange={this.handleChange.bind(this, i)} value={el.amount} type="number" name="amount" id="amount" placeholder="Amount" />
+                        <Input bsSize="sm" onBlur={this.handleBlur} onChange={this.handleChange.bind(this, i)} value={el.amount} type="number" name="amount" id="amount" placeholder="Amount" />
                     </td>
                     <td>
                         <Input bsSize="sm" onChange={this.handleChange.bind(this, i)} value={el.date} type="date" name="date" id="date" placeholder="Date" />
@@ -76,7 +90,6 @@ class Dashboard extends React.Component {
     render() {
         return (
             <div className='container-fluid'>
-                <h2>Dashboard</h2>
                 <div className='row text-center'>
                     <div className="col-md-6">
                         <h4>Income</h4>
@@ -84,8 +97,13 @@ class Dashboard extends React.Component {
                             <div className="dashboard-table">
                                 {this.returnRows()}
                             </div>
-                            <Row className="justify-content-end mr-1">
-                                <Button type="submit" value="submit" outline size="sm" color="info" >Add</Button>
+                            <Row className="mr-1">
+                                <div className="col-md-8">
+                                    <p>Total: {this.state.incomeTotal}</p>
+                                </div>
+                                <div className="col-md-4 text-right">
+                                    <Button type="submit" value="submit" outline size="sm" color="info" >Add</Button>
+                                </div>
                             </Row>
                         </Form>
                     </div>
