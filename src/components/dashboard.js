@@ -1,6 +1,8 @@
 import React from 'react';
 import { Row, Button, Form, Input } from 'reactstrap';
 import { Table } from 'reactstrap';
+import { INCOMEDATA } from '../shared/income-data';
+import { EXPENSEDATA } from '../shared/expense-data';
 
 
 class Dashboard extends React.Component {
@@ -10,22 +12,8 @@ class Dashboard extends React.Component {
             incomeTotal: 0,
             expenseTotal: 0,
             paidTotal: 0,
-            income: [
-                {
-                    source: '',
-                    amount: '',
-                    date: '',
-                }
-            ],
-            expense: [
-                {
-                    source: '',
-                    amount: '',
-                    date: '',
-                    paid: '',
-                    status: false
-                }
-            ]
+            income: INCOMEDATA,
+            expense: EXPENSEDATA
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleExpenseChange = this.handleExpenseChange.bind(this);
@@ -197,6 +185,7 @@ class Dashboard extends React.Component {
 
     saveData(){
         alert('Working');
+        console.log(this.state.income, this.state.expense);
     }
 
 
