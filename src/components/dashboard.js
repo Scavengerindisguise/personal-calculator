@@ -13,16 +13,16 @@ class Dashboard extends React.Component {
             income: [
                 {
                     source: '',
-                    amount: null,
+                    amount: '',
                     date: '',
                 }
             ],
             expense: [
                 {
                     source: '',
-                    amount: null,
+                    amount: '',
                     date: '',
-                    paid: null,
+                    paid: '',
                     status: false
                 }
             ]
@@ -34,6 +34,7 @@ class Dashboard extends React.Component {
         this.handleBlur = this.handleBlur.bind(this);
         this.handleExpenseBlur = this.handleExpenseBlur.bind(this);
         this.handlePaidBlur = this.handlePaidBlur.bind(this);
+        this.saveData = this.saveData.bind(this);
     }
 
     handleBlur(event) {
@@ -41,7 +42,7 @@ class Dashboard extends React.Component {
         let totalI = 0;
         for (let i = 0; i < this.state.income.length; i++) {
             // debugger
-            if (this.state.income[i].amount !== null)
+            if (this.state.income[i].amount !== '')
                 totalI = totalI + parseInt(this.state.income[i].amount);
         }
         console.log(totalI, typeof (totalI), typeof (this.state.incomeTotal), this.state.income);
@@ -55,7 +56,7 @@ class Dashboard extends React.Component {
         console.log(event);
         let totalE = 0;
         for (let i = 0; i < this.state.expense.length; i++) {
-            if (this.state.expense[i].amount !== null)
+            if (this.state.expense[i].amount !== '')
                 totalE = totalE + parseInt(this.state.expense[i].amount);
         }
         console.log(totalE, typeof (this.state.expenseTotal), this.state.expense);
@@ -67,7 +68,7 @@ class Dashboard extends React.Component {
         console.log(event);
         let totalP = 0;
         for (let i = 0; i < this.state.expense.length; i++) {
-            if (this.state.expense[i].paid !== null)
+            if (this.state.expense[i].paid !== '')
                 totalP = totalP + parseInt(this.state.expense[i].paid);
         }
         console.log(totalP, typeof (this.state.paidTotal), this.state.expense);
@@ -97,7 +98,7 @@ class Dashboard extends React.Component {
         this.setState((prevState) => ({
             income: [...prevState.income, {
                 source: '',
-                amount: null,
+                amount: '',
                 date: '',
             }]
         }));
@@ -108,9 +109,9 @@ class Dashboard extends React.Component {
         this.setState((prevState) => ({
             expense: [...prevState.expense, {
                 source: '',
-                amount: null,
+                amount: '',
                 date: '',
-                paid: null,
+                paid: '',
                 status: false
             }]
         }));
@@ -169,7 +170,7 @@ class Dashboard extends React.Component {
                         <Input onBlur={this.handlePaidBlur} bsSize="sm" onChange={this.handleExpenseChange.bind(this, i)} value={el.paid} type="number" name="paid" id="paid" placeholder="Paid" />
                     </td>
                     <td>
-                        <Input onChange={this.handleExpenseChange.bind(this, i)} type="checkbox" id="status" name="status" placeholder="Status" />
+                        <Input onChange={this.handleExpenseChange.bind(this, i)} type="checkbox" id="status" name="status" placeholder="Status" value={el.status}/>
                     </td>
                 </tr>
             );
@@ -192,6 +193,10 @@ class Dashboard extends React.Component {
                 </tbody>
             </Table>
         )
+    }
+
+    saveData(){
+        alert('Working');
     }
 
 
@@ -224,9 +229,11 @@ class Dashboard extends React.Component {
                                 {this.returnExpenseRows()}
                             </div>
                             <Row className="mr-1">
-                                <div className="col-md-8">
-                                    <p>TotalExpense: {this.state.expenseTotal}</p>
-                                    <p>TotalPaid:{this.state.paidTotal}</p>
+                                <div className="col-md-4">
+                                    <p>Total Expense: {this.state.expenseTotal}</p>
+                                </div>
+                                <div className="col-md-4">
+                                    <p>Total Paid: {this.state.paidTotal}</p>
                                 </div>
                                 <div className="col-md-4 text-right">
                                     <Button type="submit" value="submit" outline size="sm" color="info" >Add</Button>
@@ -234,6 +241,9 @@ class Dashboard extends React.Component {
                             </Row>
                         </Form>
                     </div>
+                </div>
+                <div className='row justify-content-end mr-3 mt-3'>
+                  <Button onClick={this.saveData} type="button" size="sm" color="warning" >Save</Button>
                 </div>
             </div>
         )
