@@ -25,6 +25,11 @@ class Dashboard extends React.Component {
         this.saveData = this.saveData.bind(this);
     }
 
+    componentDidMount(){
+        this.handleBlur();
+        this.handleExpenseBlur();
+    }
+
     handleBlur(event) {
         console.log(event);
         let totalI = 0;
