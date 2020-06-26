@@ -1,19 +1,18 @@
 import React from 'react';
 import { Row, Button, Form, Input } from 'reactstrap';
 import { Table } from 'reactstrap';
-import { INCOMEDATA } from '../shared/income-data';
-import { EXPENSEDATA } from '../shared/expense-data';
-
+import { Loading } from './Loading';
 
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
+        console.log(props);
         this.state = {
             incomeTotal: 0,
             expenseTotal: 0,
             paidTotal: 0,
-            income: INCOMEDATA,
-            expense: EXPENSEDATA
+            income: '',
+            expense: ''
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleExpenseChange = this.handleExpenseChange.bind(this);
@@ -25,9 +24,9 @@ class Dashboard extends React.Component {
         this.saveData = this.saveData.bind(this);
     }
 
-    componentDidMount(){
-        this.handleBlur();
-        this.handleExpenseBlur();
+    componentDidMount() {
+        // this.handleBlur();
+        // this.handleExpenseBlur();
     }
 
     handleBlur(event) {
@@ -113,7 +112,7 @@ class Dashboard extends React.Component {
     }
 
     returnRows() {
-        const tableRows = this.state.income.map((el, i) => {
+        const tableRows = this.props.incomeData.map((el, i) => {
             return (
                 <tr key={i} >
                     <td>
@@ -147,7 +146,7 @@ class Dashboard extends React.Component {
     }
 
     returnExpenseRows() {
-        const tableRows = this.state.expense.map((el, i) => {
+        const tableRows = this.props.expenseData.map((el, i) => {
             return (
                 <tr key={i} >
                     <td>
@@ -163,7 +162,7 @@ class Dashboard extends React.Component {
                         <Input onBlur={this.handlePaidBlur} bsSize="sm" onChange={this.handleExpenseChange.bind(this, i)} value={el.paid} type="number" name="paid" id="paid" placeholder="Paid" />
                     </td>
                     <td>
-                        <Input onChange={this.handleExpenseChange.bind(this, i)} type="checkbox" id="status" name="status" placeholder="Status" value={el.status}/>
+                        <Input onChange={this.handleExpenseChange.bind(this, i)} type="checkbox" id="status" name="status" placeholder="Status" value={el.status} />
                     </td>
                 </tr>
             );
@@ -188,7 +187,7 @@ class Dashboard extends React.Component {
         )
     }
 
-    saveData(){
+    saveData() {
         alert('Working');
         console.log(this.state.income, this.state.expense);
     }
@@ -197,50 +196,72 @@ class Dashboard extends React.Component {
 
 
     render() {
-        return (
-            <div className='container-fluid'>
-                <div className='row text-center'>
-                    <div className="col-md-6">
-                        <h4>Income</h4>
-                        <Form onSubmit={this.addIncomeRow}>
-                            <div className="dashboard-table">
-                                {this.returnRows()}
-                            </div>
-                            <Row className="mr-1">
-                                <div className="col-md-8">
-                                    <p>Total: {this.state.incomeTotal}</p>
-                                </div>
-                                <div className="col-md-4 text-right">
-                                    <Button type="submit" value="submit" outline size="sm" color="info" >Add</Button>
-                                </div>
-                            </Row>
-                        </Form>
-                    </div>
-                    <div className="col-md-6">
-                        <h4>Expense</h4>
-                        <Form onSubmit={this.addExpenseRow}>
-                            <div className="dashboard-table">
-                                {this.returnExpenseRows()}
-                            </div>
-                            <Row className="mr-1">
-                                <div className="col-md-4">
-                                    <p>Total Expense: {this.state.expenseTotal}</p>
-                                </div>
-                                <div className="col-md-4">
-                                    <p>Total Paid: {this.state.paidTotal}</p>
-                                </div>
-                                <div className="col-md-4 text-right">
-                                    <Button type="submit" value="submit" outline size="sm" color="info" >Add</Button>
-                                </div>
-                            </Row>
-                        </Form>
+        console.log(this.props);
+        if (this.props.isLoading) {
+            return (
+                <div className="container">
+                    <div className="row">
+                        <Loading />
                     </div>
                 </div>
-                <div className='row justify-content-end mr-3 mt-3'>
-                  <Button onClick={this.saveData} type="button" size="sm" color="warning" >Save</Button>
+            );
+        }
+        else if (this.props.errMess) {
+            return (
+                <div className="container">
+                    <div className="row">
+                        <h4>{this.props.errMess}</h4>
+                    </div>
                 </div>
-            </div>
-        )
+            );
+        }
+        else if (this.props.incomeData && this.props.expenseData) {
+            return (
+                <div className='container-fluid'>
+                    <div className='row text-center'>
+                        <div className="col-md-6">
+                            <h4>Income</h4>
+                            <Form onSubmit={this.addIncomeRow}>
+                                <div className="dashboard-table">
+                                    {this.returnRows()}
+                                </div>
+                                <Row className="mr-1">
+                                    <div className="col-md-8">
+                                        <p>Total: {this.state.incomeTotal}</p>
+                                    </div>
+                                    <div className="col-md-4 text-right">
+                                        <Button type="submit" value="submit" outline size="sm" color="info" >Add</Button>
+                                    </div>
+                                </Row>
+                            </Form>
+                        </div>
+                        <div className="col-md-6">
+                            <h4>Expense</h4>
+                            <Form onSubmit={this.addExpenseRow}>
+                                <div className="dashboard-table">
+                                    {this.returnExpenseRows()}
+                                </div>
+                                <Row className="mr-1">
+                                    <div className="col-md-4">
+                                        <p>Total Expense: {this.state.expenseTotal}</p>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <p>Total Paid: {this.state.paidTotal}</p>
+                                    </div>
+                                    <div className="col-md-4 text-right">
+                                        <Button type="submit" value="submit" outline size="sm" color="info" >Add</Button>
+                                    </div>
+                                </Row>
+                            </Form>
+                        </div>
+                    </div>
+                    <div className='row justify-content-end mr-3 mt-3'>
+                        <Button onClick={this.saveData} type="button" size="sm" color="warning" >Save</Button>
+                    </div>
+                </div>
+            )
+        } else
+            return <div></div>
     }
 }
 
